@@ -11,12 +11,23 @@ app.listen(port, () => {
      console.log(`Server started on 3000`); 
 });
 
-db.sequelize.sync().then((result) => {
-    app
-    .listen(3000, () => {
-        console.log('Server started');
+db.sequelize.sync()
+    .then((result) => {
+        app.listen(3000, () => {
+            console.log('Server started');
+        })
     })
     .catch((err) => {
         console.log(err);
-    });
-});
+    })
+
+app.post('/komiks', async (req, res) => {
+    const data =  req.body;
+    try{
+        const komik = await db.Komik.create(data);
+        res.send(komik);
+    } catch (err) {
+        res.send(err);
+    }
+})
+
