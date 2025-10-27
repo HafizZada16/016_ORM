@@ -21,7 +21,7 @@ db.sequelize.sync()
         console.log(err);
     })
 
-app.post('/komiks', async (req, res) => {
+app.post('/komik', async (req, res) => {
     const data =  req.body;
     try{
         const komik = await db.Komik.create(data);
@@ -31,12 +31,27 @@ app.post('/komiks', async (req, res) => {
     }
 })
 
-app.get('/komiks', async (req, res) => {
+app.get('/komik', async (req, res) => {
     try{
-        const komiks = await db.Komik.findAll();
-        res.send(komiks);
+        const komik = await db.Komik.findAll();
+        res.send(komik);
     } catch (err) {
         res.send(err);
     }
 })
 
+app.put('/komik/:id', async (req, res) => {
+    const id = req.params.id;
+    const data = req.body;
+    try{
+        const komik = await db.Komik.findByPk(id);
+        if(komik){
+            return res.status(404).send({ message: 'Komik tidak tersedia'});
+    }
+    await komik.update(data);
+    res.send({ message:"Komik berhasil di update",komik});
+    } catch (err) {
+        res.status(500).send(err);
+    }
+
+});
